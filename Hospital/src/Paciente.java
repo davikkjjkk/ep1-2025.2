@@ -4,6 +4,7 @@ public class Paciente {
     private String nome;
     private final String cpf;
     private int idade;
+    private boolean especial;
     private ArrayList<String> historicoInternacoes;
     private ArrayList<String> historicoConsultas;
 
@@ -11,9 +12,18 @@ public class Paciente {
         this.nome = nome;
         this.cpf = cpf;
         this.idade = idade;
+        this.especial = false;
         this.historicoInternacoes = new ArrayList<>();
         this.historicoConsultas = new ArrayList<>();
 
+    }
+
+    public boolean isEspecial(){
+        return especial;
+    }
+
+    public void setEspecial(boolean especial) {
+        this.especial = especial;
     }
 
     public String getNome(){
@@ -42,15 +52,6 @@ public class Paciente {
 
     public void adicionarInternacao(String internacao){
         historicoInternacoes.add(internacao);
-    }
-
-    public void exibirHistorico(){
-        System.out.println("Historico de Consultas: "  + historicoConsultas);
-        System.out.println("Historico de internacoes: " + historicoInternacoes);
-    }
-
-    public void exibirInfo(){
-        System.out.println("Nome: " + nome + " | CPF: " + cpf + " | Idade: " + idade);
     }
 
 }

@@ -4,6 +4,7 @@ public class PacienteEspecial extends Paciente{
     public PacienteEspecial(String nome, String cpf, int idade, PlanoSaude planoSaude){
         super(nome, cpf, idade);
         this.planoSaude = planoSaude;
+        this.setEspecial(true);
     }
 
     public PlanoSaude getPlanoSaude(){
@@ -14,8 +15,4 @@ public class PacienteEspecial extends Paciente{
         this.planoSaude = planoSaude;
     }
 
-    public void exibirInfo(){
-        super.exibirInfo();
-        System.out.println("Plano de Saude: " + planoSaude);
-    }
 }
