@@ -7,6 +7,7 @@ public class Consulta {
     private String local;
     private String status;
     private double valor;
+    private Diagnostico diagnostico;
 
     public Consulta(Paciente paciente, Medico medico, LocalDateTime dataHora, String local, double valor){
         this.paciente = paciente;
@@ -52,6 +53,16 @@ public class Consulta {
 
     public double getValor(){
         return valor;
+    }
+
+    public Diagnostico getDiagnostico(){
+        return diagnostico;
+    }
+
+    public void registrarDiagnostico(Diagnostico diagnostico){
+        this.diagnostico = diagnostico;
+        this.status = "Concluída";
+        paciente.adicionarConsulta(this);
     }
 
 

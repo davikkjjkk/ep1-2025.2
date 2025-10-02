@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Paciente {
     private String nome;
@@ -6,7 +7,7 @@ public class Paciente {
     private int idade;
     private boolean especial;
     private ArrayList<String> historicoInternacoes;
-    private ArrayList<String> historicoConsultas;
+    private ArrayList<Consulta> historicoConsultas;
 
     public Paciente (String nome, String cpf, int idade){
         this.nome = nome;
@@ -52,6 +53,22 @@ public class Paciente {
 
     public void adicionarInternacao(String internacao){
         historicoInternacoes.add(internacao);
+    }
+
+    public void adicionarConsulta(Consulta consulta){
+        historicoConsultas.add(consulta);
+    }
+
+    public List<Consulta> getHistoricoConsultas(){
+        return historicoConsultas;
+    }
+
+    public void adicionarInternacao(String internacao){
+        historicoInternacoes.add(internacao);
+    }
+
+    public List<String> getHistoricoInternacoes(){
+        return historicoInternacoes;
     }
 
 }
