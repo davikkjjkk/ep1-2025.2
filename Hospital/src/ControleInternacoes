@@ -1,0 +1,33 @@
+import java.util.List;
+import java.util.ArrayList;
+
+public class ControleInternacoes{
+    private List<Internacoes> internacoes;  
+
+    public ControleInternacoes(){
+        this.internacoes = new ArrayList<>();
+
+    }
+
+    public boolean registrarInternacoes(Internacao internacao){
+        for(internacao i : internacoes){
+            if(i.getQuarto() == internacao.getQuarto() && i.getStatus().equals("Ativa")){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void cancelarInternacao(Internacao internacao){
+        internacao.cancelar();
+    }
+
+    public void darAlta(Internacao internacao, java.time.LocalDate dataSaida){
+        internacao.darAlta(dataSaida);
+    }
+
+    public List<Internacao> getInternacoes(){
+        return internacoes;
+    }
+}

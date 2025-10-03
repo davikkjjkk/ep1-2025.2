@@ -47,13 +47,6 @@ public class Paciente {
         this.idade = idade;
     } 
 
-    public void adicionarConsulta(String consulta){
-        historicoConsultas.add(consulta);
-    }
-
-    public void adicionarInternacao(String internacao){
-        historicoInternacoes.add(internacao);
-    }
 
     public void adicionarConsulta(Consulta consulta){
         historicoConsultas.add(consulta);

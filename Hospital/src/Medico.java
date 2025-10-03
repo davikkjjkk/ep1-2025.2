@@ -43,7 +43,7 @@ public class Medico {
         return custoConsulta;
     }
 
-    public void setCustoConsulta(double custoconsulta){
+    public void setCustoConsulta(double custoConsulta){
         this.custoConsulta = custoConsulta;
     }
 

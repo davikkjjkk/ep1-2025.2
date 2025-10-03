@@ -21,7 +21,7 @@ public class Consulta {
     private double aplicarDesconto(double valorBase){
         if(paciente.isEspecial() && paciente instanceof PacienteEspecial){
             PacienteEspecial p = (PacienteEspecial) paciente;
-            double desconto = p.getPlanoSaude().getDesconto();
+            double desconto = p.getPlanoSaude().getDescontoIdoso();
             return valorBase - (valorBase * desconto);
         }
         return valorBase;
