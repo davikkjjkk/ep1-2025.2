@@ -8,6 +8,9 @@ public class Paciente {
     private boolean especial;
     private ArrayList<String> historicoInternacoes;
     private ArrayList<Consulta> historicoConsultas;
+    private PlanoSaude planoSaude;
+    
+    
 
     public Paciente (String nome, String cpf, int idade){
         this.nome = nome;
@@ -63,5 +66,15 @@ public class Paciente {
     public List<String> getHistoricoInternacoes(){
         return historicoInternacoes;
     }
+
+    public PlanoSaude getPlanoSaude(){
+        return planoSaude;
+    }
+
+    public void setPlanoSaude(PlanoSaude planoSaude){
+        this.planoSaude = planoSaude;
+    }
+
+
 
 }

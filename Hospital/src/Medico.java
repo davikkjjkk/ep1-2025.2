@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Medico {
     private String nome;
@@ -6,6 +7,7 @@ public class Medico {
     private String especialidade;
     private double custoConsulta;
     private ArrayList<String> agendaHorarios;
+    private List<Consulta> consultas = new ArrayList<>();
 
     public Medico(String nome, String crm, String especialidade, double custoConsulta){
         this.nome = nome;
@@ -57,5 +59,12 @@ public class Medico {
 
     public void removerHorario(String horario){
         agendaHorarios.remove(horario);
+    }
+    public void adicionarConsulta(Consulta c){
+        consultas.add(c);
+    }
+
+    public int getNumeroConsultas(){
+        return consultas.size();
     }
 }

@@ -27,6 +27,10 @@ public class Consulta {
         return valorBase;
     }
 
+    public boolean isFutura(){
+        return dataHora.isAfter(LocalDateTime.now());
+    }
+
     public Paciente getPaciente(){
         return paciente;
     }
@@ -53,6 +57,10 @@ public class Consulta {
 
     public double getValor(){
         return valor;
+    }
+
+    public void setValor(double valor){
+        this.valor = valor;
     }
 
     public Diagnostico getDiagnostico(){

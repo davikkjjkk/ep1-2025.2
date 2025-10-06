@@ -1,23 +1,26 @@
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 public class Internacao{
     private Paciente paciente;
     private Medico medicoResponsavel;
-    private LocalDate dataEntrada;
-    private LocalDate dataSaida;
+    private LocalDateTime dataEntrada;
+    private LocalDateTime dataSaida;
     private int quarto;
     private double custo;
     private String status;
 
-    public Internacao(Paciente paciente, Medico medicoResponsavel, LocalDate dataEntrada, int quarto, double custo){
+    public Internacao(Paciente paciente, Medico medicoResponsavel, int quarto, double custo){
         this.paciente = paciente;
         this.medicoResponsavel = medicoResponsavel;
-        this.dataEntrada = dataEntrada;
         this.quarto = quarto;
+        this.custo = custo;
         this.status = "Ativa";
+        this.dataEntrada = LocalDateTime.now();
+        this.dataSaida = null;
     }
 
-    public void darAlta(LocalDate dataSaida){
+    public void darAlta(LocalDateTime dataSaida){
         this.dataSaida = dataSaida;
         this.status = "Concluida";
     }
@@ -34,12 +37,16 @@ public class Internacao{
         return medicoResponsavel;
     }
 
-    public LocalDate getDataEntrada(){
+    public LocalDateTime getDataEntrada(){
         return dataEntrada;
     }
 
-    public LocalDate getDataSaida(){
+    public LocalDateTime getDataSaida(){
         return dataSaida;
+    }
+
+    public void setDataSaida(LocalDateTime dataSaida){
+        this.dataSaida = dataSaida;
     }
 
     public int getQuarto(){
