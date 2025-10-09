@@ -48,7 +48,7 @@ Desenvolvimento de um sistema de gerenciamento hospitalar utilizando os conceito
    ![alt text](image-1.png)
 
 3. Relatório de Medicos:  
-   ![alt text](image-2.png)
+   ![alt text](image-3.png)
 
 ---
 
