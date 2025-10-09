@@ -1,12 +1,13 @@
-import java.util.ArrayList;
+
+import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 
 public class Main{
-    private static ArrayList<Paciente> pacientes = new ArrayList<>();
-    private static ArrayList<Medico> medicos = new ArrayList<>();
-    private static ArrayList<Consulta> consultas = new ArrayList<>();
-    private static ArrayList<Internacao> internacoes = new ArrayList<>();
+    private static List<Paciente> pacientes = ArquivoUtil.lerPacientes();
+    private static List<Medico> medicos = ArquivoUtil.lerMedicos();
+    private static List<Consulta> consultas = ArquivoUtil.lerConsultas(pacientes, medicos);
+    private static List<Internacao> internacoes = ArquivoUtil.lerInternacoes(pacientes, medicos);
 
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
@@ -19,7 +20,7 @@ public class Main{
             System.out.println("2 - Cadastrar Medicos");
             System.out.println("3 - Agendar Consulta");
             System.out.println("4 - Internacoes");
-            System.out.println("5 - Relatorios");
+            System.out.println("5 - Exibir Relatorios");
             System.out.println("0 - Sair");
             opcao = sc.nextInt();
             sc.nextLine();
@@ -38,7 +39,7 @@ public class Main{
                     gerenciarInternacoes(sc);
                     break;
                 case 5:
-                    gerarRelatorios(sc);
+                    exibirRelatorios(sc);
                     break;
                 case 0:
                     System.out.println("Encerrando o sistema...");
@@ -61,10 +62,51 @@ public class Main{
         System.out.println("Eh paciente especial? (Sim/Nao)");
         boolean especial = sc.nextLine().equalsIgnoreCase("Sim");
 
+        PlanoSaude plano = null;
+        if(especial){
+            System.out.println("Vamos cadastrar o plano de saude do paciente especial");
+
+            System.out.print("Nome do plano: ");
+            String nomePlano = sc.nextLine();
+
+            System.out.print("Informe o desconto para Idosos (em %): ");
+            double descontoIdoso = sc.nextDouble() /100;
+            sc.nextLine();
+
+            plano = new PlanoSaude(nomePlano, especial, descontoIdoso);
+
+            System.out.print("Deseja adicionar descontos por especialidade? (Sim/Nao): ");
+            if(sc.nextLine().equalsIgnoreCase("Sim")){
+                boolean adicionando = true;
+                while (adicionando){
+                    System.out.print("Especialidade: ");
+                    String esp = sc.nextLine();
+
+                    System.out.print("Desconto para essa especialidade (%): ");
+                    double desc = sc.nextDouble() /100;
+                    sc.nextLine();
+
+                    plano.adicionarDesconto(esp, desc);
+
+                    System.out.print("Adicionar outra especialidade (Sim/Nao): ");
+                    adicionando = sc.nextLine().equalsIgnoreCase("Sim");
+                }
+            }
+
+            System.out.println("Plano de Saude cadastrado com sucesso.");
+        }
+
         Paciente p = new Paciente(nome, cpf, idade);
         p.setEspecial(especial);
+
+        if(plano != null && p instanceof PacienteEspecial){
+            ((PacienteEspecial) p).setPlanoSaude(plano);
+        }
+
         pacientes.add(p);
+        ArquivoUtil.salvarPacientes(pacientes);
         System.out.println("Paciente cadastrado com sucesso.");
+
     }
 
     private static void cadastrarMedico(Scanner sc){
@@ -114,6 +156,7 @@ public class Main{
         }
 
         medicos.add(medicoNovo);
+        ArquivoUtil.salvarMedicos(medicos);
         System.out.println("Medico cadastrado.");
     }
 
@@ -147,8 +190,10 @@ public class Main{
         LocalDateTime agora = LocalDateTime.now();
         Consulta c = new Consulta(pacientes.get(idxPaciente), medicos.get(idxMedico), agora, local, valor);
         consultas.add(c);
+        ArquivoUtil.salvarConsultas(consultas);
 
         pacientes.get(idxPaciente).adicionarConsulta(c);
+
         System.out.println("Consulta agendada.");
     }
 
@@ -204,6 +249,7 @@ public class Main{
 
         Internacao i = new Internacao(pacientes.get(idxPaciente), medicos.get(idxMedico), quarto, custo);
         internacoes.add(i);
+        ArquivoUtil.salvarInternacoes(internacoes);
         
         pacientes.get(idxPaciente).adicionarInternacao("Internacao no  Quarto: " + quarto);
         System.out.println("Internacao registrada");
@@ -224,49 +270,93 @@ public class Main{
         sc.nextLine();
 
         internacoes.get(idx).setDataSaida(LocalDateTime.now());
+        ArquivoUtil.salvarInternacoes(internacoes);
         System.out.println("Paciente liberado.");
     }
 
-    private static void gerarRelatorios(Scanner sc){
-        System.out.println("Escolha: ");
-        System.out.println("\n1 - Listar Pacientes");
-        System.out.println("2 - Listar Medicos");
-        System.out.println("3 - Consultas Agendadas");
-        System.out.println("4 - Pacientes Internados");
+    private static void exibirRelatorios(Scanner sc){
+      Relatorios rel = new Relatorios(pacientes, medicos, consultas, internacoes);
+      
+      System.out.println("Escolha");
+      System.out.println("1 - Listar Pacientes");
+      System.out.println("2 - Listar Medicos");
+      System.out.println("3 - Consultas Futuras");
+      System.out.println("4 - Consultas Passadas");
+      System.out.println("5 - Pacientes Internados");
+      System.out.println("6 - Medico Que Mais Atendeu");
+      System.out.println("7 - Especialidade Mais Procurada");
+      System.out.println("8 - Economia por Plano de Saude");
+      System.out.println("9 - Voltar ao Menu Principal");
 
-        int opc = sc.nextInt();
-        sc.nextLine();
+      int opc = sc.nextInt();
+    sc.nextLine();
 
-        switch (opc) {
-            case 1:
-                for(Paciente p : pacientes){
-                    System.out.println("- " + p.getNome() + " (" + (p.isEspecial() ? "Especial" : "Comum") + ")");
-                }
-                break;
-        
-            case 2:
-            for(Medico m : medicos){
-                System.out.println("- " + m.getNome() + " /" + m.getEspecialidade());
-            }
-                break;
-
-            case 3:
-            for(Consulta c : consultas){
-                System.out.println("- " + c.getPaciente().getNome() + " com" + c.getMedico().getNome());
+    switch (opc) {
+        case 1:
+            System.out.println("\n--- PACIENTES ---");
+            for (Paciente p : rel.getPacientesCadastrados()) {
+                System.out.println("- " + p.getNome() + " (" + (p.isEspecial() ? "Especial" : "Comum") + ")");
             }
             break;
 
-            case 4:
-            for(Internacao i : internacoes){
-                if(i.getDataSaida() == null){
-                    System.out.println("- " + i.getPaciente().getNome() + " no quarto" + i.getQuarto());
-
-                }
+        case 2:
+            System.out.println("\n--- MÉDICOS ---");
+            for (Medico m : rel.getMedicosCadastrados()) {
+                System.out.println("- " + m.getNome() + " / " + m.getEspecialidade());
             }
             break;
 
-            default:
-            System.out.println("Opcao invalida");
-        }
+        case 3:
+            System.out.println("\n--- CONSULTAS FUTURAS ---");
+            for (Consulta c : rel.getConsultasFuturas()) {
+                System.out.println(c.getPaciente().getNome() + " com " + c.getMedico().getNome());
+            }
+            break;
+
+        case 4:
+            System.out.println("\n--- CONSULTAS PASSADAS ---");
+            for (Consulta c : rel.getConsultasPassadas()) {
+                System.out.println(c.getPaciente().getNome() + " com " + c.getMedico().getNome());
+            }
+            break;
+
+        case 5:
+            System.out.println("\n--- PACIENTES INTERNADOS ---");
+            for (Internacao i : rel.getPacientesInternados()) {
+                System.out.println(i.getPaciente().getNome() + " no quarto " + i.getQuarto());
+            }
+            break;
+
+        case 6:
+            Medico maisAtendeu = rel.getMedicoQueMaisAtendeu();
+            if (maisAtendeu != null) {
+                System.out.println("Médico que mais atendeu: " + maisAtendeu.getNome());
+            } else {
+                System.out.println("Nenhum médico encontrado.");
+            }
+            break;
+
+        case 7:
+            String esp = rel.getEspecialidadeMaisProcurada();
+            System.out.println("Especialidade mais procurada: " + (esp != null ? esp : "Nenhuma registrada."));
+            break;
+
+        case 8:
+            System.out.print("Digite o nome do plano: ");
+            String nomePlano = sc.nextLine();
+            double economia = rel.getEconomiaPorPlano(nomePlano);
+            int qtdPacientes = rel.getQuantidadePacientesPorPlano(nomePlano);
+
+            System.out.println("Plano: " + nomePlano);
+            System.out.println("Pacientes cadastrados nesse plano: " + qtdPacientes);
+            System.out.println("Economia total gerada: R$ " + String.format("%.2f", economia));
+            break;
+
+        default:
+            System.out.println("Voltando ao menu principal...");
+            break;
     }
+  }
+
 }
+    
